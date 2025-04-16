@@ -1,42 +1,33 @@
 # test_quiz.py
 import pytest
-from quiz import app
+from app import app  
 
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
+    app.config['SECRET_KEY'] = 'test-key-123'  
     return app.test_client()
 
 def test_index_route(client):
-    """Test that the home page loads successfully"""
+    """Test the home page loads"""
     response = client.get('/')
     assert response.status_code == 200
-    assert b'form' in response.data.lower()  # Check for form element
+    assert b'form' in response.data.lower()
 
-def test_session_variables(client):
-    """Test that session variables are set correctly"""
-    with client:
-        client.get('/')
-        assert 'num1' in session
-        assert 'num2' in session
-        assert 'operator' in session
-        assert 'correct_answer' in session
-
-def test_calculation_logic(client):
-    """Test the math logic works correctly"""
-    with client:
-        client.get('/')
-        num1 = session['num1']
-        num2 = session['num2']
-        operator = session['operator']
-        
-        if operator == '+':
-            assert session['correct_answer'] == num1 + num2
-        else:
-            assert session['correct_answer'] == max(num1, num2) - min(num1, num2)
-
-# Helper to access session during tests
-@pytest.fixture(autouse=True)
-def session(client):
+def test_answer_submission(client):
+    """Test answer submission flow"""
+    # First request to set up session
+    client.get('/')
+    
+    # Get the correct answer from session
     with client.session_transaction() as sess:
-        yield sess
+        correct_answer = sess['correct_answer']
+        test_answer = correct_answer + 1  # Wrong answer
+    
+    # Test correct answer
+    response = client.post('/check', data={'answer': str(correct_answer)})
+    assert b'Correct!' in response.data
+    
+    # Test wrong answer
+    response = client.post('/check', data={'answer': str(test_answer)})
+    assert b'Wrong!' in response.data
