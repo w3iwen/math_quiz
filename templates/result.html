@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="result {% if is_correct %}correct{% else %}wrong{% endif %}">
+        <h2>{{ message }}</h2>
+        <p>The question was: {{ num1 }} {{ operator }} {{ num2 }}</p>
+        <a href="{{ url_for('index') }}" class="next-question">Next Question</a>
+    </div>
+{% endblock %}

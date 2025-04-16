@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="quiz-question">
+        <h2>What is {{ num1 }} {{ operator }} {{ num2 }}?</h2>
+        <form action="/check" method="POST">
+            <input type="number" name="answer" required autofocus>
+            <button type="submit">Check Answer</button>
+        </form>
+    </div>
+{% endblock %}
