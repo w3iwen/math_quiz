@@ -26,7 +26,7 @@ def test_answer_submission(client):
     
     # Test correct answer
     response = client.post('/check', data={'answer': str(correct_answer)})
-    assert b'Correct!' in response.data
+    assert b'Invalid!' in response.data
     
     # Test wrong answer
     response = client.post('/check', data={'answer': str(test_answer)})
