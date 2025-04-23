@@ -40,7 +40,7 @@ def check():
     operator = session.get('operator', '+')
     
     if user_answer == correct_answer:
-        message = "Correct!"
+        message = "Correct! 🎉"
         is_correct = True
     else:
         message = f"Wrong! The correct answer was {correct_answer}. Try again!"
